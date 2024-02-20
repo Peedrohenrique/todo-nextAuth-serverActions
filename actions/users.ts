@@ -1,8 +1,10 @@
 "use server";
 import { sql } from "@vercel/postgres";
-import { z } from "zod";
+import { object, z } from "zod";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
+import { User } from "#/types/user";
+import { signIn } from "next-auth/react";
 
 const UserSchema = z.object({
   id: z.string(),
@@ -58,9 +60,24 @@ export async function createUser(state: CreateUserState, formData: FormData) {
 
 export async function getUserByEmail(email: string) {
   try {
-    const { rows } = await sql`SELECT * FROM users WHERE email = ${email}`;
+    const { rows } =
+      await sql<User>`SELECT * FROM users WHERE email = ${email}`;
     return rows[0];
   } catch (error) {
     throw new Error("Este usuário não existe.");
+  }
+}
+
+export async function authenticate(
+  state: string | undefined,
+  formData: FormData
+) {
+  try {
+    await signIn("credentials", Object.fromEntries(formData));
+  } catch (error) {
+    if ((error as Error).message.includes("CredentialsSignin"))
+      return "CredentialsSignin";
+
+    throw error;
   }
 }
