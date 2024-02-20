@@ -17,13 +17,14 @@ const UserSchema = z.object({
   role: z.string(),
 });
 
-const CreateUser = UserSchema.omit({ id: true, image: true, role: true });
+const CreateUser = UserSchema.omit({ id: true, role: true });
 
 type CreateUserState = {
   errors?: {
     name?: string[];
     email?: string[];
     password?: string[];
+    image?: string[];
   };
 };
 
@@ -32,6 +33,7 @@ export async function createUser(state: CreateUserState, formData: FormData) {
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
+    image: formData.get("image"),
   });
 
   if (!validatedFields.success) {
@@ -41,15 +43,14 @@ export async function createUser(state: CreateUserState, formData: FormData) {
     };
   }
 
-  const { name, email, password } = validatedFields.data;
+  const { name, email, password, image } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const githubImage = `https://github.com/${name}.png`;
   const role = "user";
 
   try {
     await sql`
         INSERT INTO users (name, email, password, image, role)
-        VALUES (${name}, ${email}, ${hashedPassword}, ${githubImage}, ${role})
+        VALUES (${name}, ${email}, ${hashedPassword}, ${image}, ${role})
         `;
   } catch (error) {
     return { message: "Falha ao inserir usuário no banco de dados." };
