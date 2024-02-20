@@ -10,16 +10,17 @@ export function LoginForm() {
           type="text"
           id="email"
           name="email"
-          placeholder="seuemail@dvsk.com"
+          placeholder="email@hotmail.com"
           className="max-w-xs h-9 px-2 text-sm placeholder:text-gray-300 border rounded"
         />
       </div>
       <div className="grid gap-1 mb-6">
-        <label htmlFor="email" className="text-gray-600">Password</label>
+        <label htmlFor="email" className="text-gray-600">Senha</label>
         <input
           type="password"
           id="password"
           name="password"
+          placeholder="********"
           className="max-w-xs h-9 px-2 text-sm placeholder:text-gray-300 border rounded"
         />
       </div>

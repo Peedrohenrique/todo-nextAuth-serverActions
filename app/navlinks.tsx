@@ -7,6 +7,8 @@ const navlinks = [
   { name: 'Home', href: '/' },
   { name: 'Todos', href: '/todos' },
   { name: 'Private', href: '/private' },
+  { name: 'Login', href: '/auth/login' },
+  { name: 'Cadastro', href: '/auth/register' },
 ];
 
 export function Navlinks() {
