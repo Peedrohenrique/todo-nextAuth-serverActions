@@ -4,7 +4,8 @@ import { object, z } from "zod";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import { User } from "#/types/user";
-import { signIn } from "next-auth/react";
+import { signIn } from "#/app/auth/providers";
+
 
 const UserSchema = z.object({
   id: z.string(),
@@ -17,14 +18,13 @@ const UserSchema = z.object({
   role: z.string(),
 });
 
-const CreateUser = UserSchema.omit({ id: true, role: true });
+const CreateUser = UserSchema.omit({ id: true, image: true, role: true });
 
 type CreateUserState = {
   errors?: {
     name?: string[];
     email?: string[];
     password?: string[];
-    image?: string[];
   };
 };
 
@@ -33,7 +33,7 @@ export async function createUser(state: CreateUserState, formData: FormData) {
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
-    image: formData.get("image"),
+    
   });
 
   if (!validatedFields.success) {
@@ -43,9 +43,10 @@ export async function createUser(state: CreateUserState, formData: FormData) {
     };
   }
 
-  const { name, email, password, image } = validatedFields.data;
+  const { name, email, password } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
   const role = "user";
+  const image = "https://img.freepik.com/fotos-gratis/ilustracao-3d-de-um-adolescente-com-um-rosto-engracado-e-oculos_1142-50955.jpg"
 
   try {
     await sql`

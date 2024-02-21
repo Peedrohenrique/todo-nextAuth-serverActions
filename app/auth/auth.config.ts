@@ -1,6 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 
 export const authConfig = {
+  pages: { signIn: '/auth/login'},
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
@@ -17,6 +18,14 @@ export const authConfig = {
 
       return true;
     },
+    jwt({ token, user }) {
+      if (user) token.role = user.role
+      return token
+    },
+    session({ session, token }) {
+      if (token.role) session.user.role = token.role
+      return session
+    }
   },
   providers: [],
 } as NextAuthConfig;

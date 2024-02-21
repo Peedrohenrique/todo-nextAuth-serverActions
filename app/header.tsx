@@ -1,6 +1,6 @@
 import { Logo } from "./logo";
 import { Navlinks } from "./navlinks";
-// import { UserSettings } from "./user-settings";
+import { UserSettings } from "./user-settings";
 
 export async function Header() {
   return (
@@ -8,7 +8,7 @@ export async function Header() {
       <nav className="w-full max-w-screen-xl mx-auto flex items-center justify-between">
         <Logo />
         <Navlinks />
-        {/* <UserSettings /> */}
+        <UserSettings />
       </nav>
     </header>
   )
