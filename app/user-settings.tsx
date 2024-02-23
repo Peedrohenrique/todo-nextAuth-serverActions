@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { signIn } from "./auth/providers";
+import { signOut } from "./auth/providers";
 
-export function UserSettings({ image }: { image?: string | null | undefined }) {
+export async function UserSettings({ image }: { image?: string | null | undefined }) {
+  
   return (
     <div className="flex items-center gap-4">
       <Image 
@@ -13,7 +14,7 @@ export function UserSettings({ image }: { image?: string | null | undefined }) {
       />
       <form action={async () => {
         'use server'
-        await signIn
+        await signOut()
       }}>
         <button type="submit" className="hover:underline">Sign out</button>
       </form>

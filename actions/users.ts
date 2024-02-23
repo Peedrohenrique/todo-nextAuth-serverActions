@@ -1,6 +1,6 @@
 "use server";
 import { sql } from "@vercel/postgres";
-import { object, z } from "zod";
+import { z } from "zod";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import { User } from "#/types/user";
