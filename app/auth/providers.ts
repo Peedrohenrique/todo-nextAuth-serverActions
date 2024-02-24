@@ -23,10 +23,7 @@ const providers = {
           const { email, password } = parsedCredentials.data;
 
           const user = await getUserByEmail(email);
-
-          if (!user) {
-            return null;
-          }
+          if (!user) return null;
 
           const passwordMatch = await bcrypt.compare(password, user.password);
 

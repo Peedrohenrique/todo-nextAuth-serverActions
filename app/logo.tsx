@@ -6,7 +6,7 @@ export function Logo () {
       href="/" 
       className="text-xl font-semibold text-gray-600 hover:text-violet-500"
     >
-      Lista de tarefas online
+      Minhas Tarefas
       </Link>
   )
 }

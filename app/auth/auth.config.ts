@@ -7,8 +7,9 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const isPrivateRoutes = nextUrl.pathname.startsWith("/private");
       const isAuthRoutes = nextUrl.pathname.startsWith("/auth");
+      const isTodosRoute = nextUrl.pathname.startsWith("/todos");
 
-      if (!isLoggedIn && isPrivateRoutes) {
+      if (!isLoggedIn && (isPrivateRoutes || isTodosRoute)) {
         return false; // Redirecionar usuários não autenticados para a página de login
       }
 
@@ -20,11 +21,13 @@ export const authConfig = {
       
     },
     jwt({ token, user }) {
-      if (user) token.role = user.role
+      if (user) token.role = user.role;
+      if (user) token.id = user.id;
       return token
     },
     session({ session, token }) {
       if (token.role) session.user.role = token.role
+      if (token.id) session.user.id = token.id
       return session
     }
   },

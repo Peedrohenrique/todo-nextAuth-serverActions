@@ -5,17 +5,15 @@ import { usePathname } from "next/navigation";
 
 const navlinks = [
   { name: 'Home', href: '/' },
-  { name: 'Todos', href: '/todos' },
-  { name: 'Private', href: '/private' },
-  { name: 'Login', href: '/auth/login' },
-  { name: 'Cadastro', href: '/auth/register' },
+  { name: 'Tarefas', href: '/todos' },
+  { name: 'Cadastrar', href: '/private' },
 ];
 
 export function Navlinks() {
   const pathname = usePathname()
 
   return (
-    <ul className="flex items-center justify-between gap-10">
+    <ul className="flex items-left justify-start gap-5">
       {navlinks.map(link => {
         const isActive = pathname === link.href
         return (

@@ -1,11 +1,12 @@
 import { createTodo } from "#/actions/todos";
 
-export function TodoForm() {
+export function TodoForm({ user_id }: any) {
+
   return (
 
-    <form  className="w-80 p-6 border roudned-mg bg-violet-50 rounded">
+    <form action={createTodo}  className="w-80 p-6 border roudned-mg bg-violet-50 rounded">
 
-      <span>Todo</span>
+      <span>Nova tarefa</span>
 
       <input 
         type="text" 
@@ -13,6 +14,12 @@ export function TodoForm() {
         placeholder="Passear com o pet..."
         className="block w-full p-2 mt-2 border rounded"
       />
+
+      <input 
+    type="hidden" 
+    name="user_id" 
+    value={user_id}
+  />
 
       <button 
         type="submit" 

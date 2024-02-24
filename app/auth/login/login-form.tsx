@@ -1,13 +1,28 @@
 'use client'
 import { authenticate } from "#/actions/users";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 export function LoginForm() {
+  const [error, setError] = useState<string | null>(null);
   const [state, dispatch] = useFormState(authenticate, undefined)
 
+
+  useEffect(() => {
+    if (state === "CredentialsSignin") {
+      setError("Credenciais inválidas. Verifique seu e-mail e senha.");
+    } else {
+      setError(null);
+    }
+  }, [state]);
+  
+
   return (
-    <form className="w-fit p-10 border rounded" action={dispatch}>
+    <form
+      className="w-fit p-10 border rounded"
+      action={dispatch}
+    >
       <h1 className="mb-10 font-medium text-lg text-gray-600">Faça login para continuar</h1>
       <div className="grid gap-1 mb-4">
         <label htmlFor="email" className="text-gray-600">E-mail</label>
@@ -18,6 +33,11 @@ export function LoginForm() {
           placeholder="email@hotmail.com"
           className="max-w-xs h-9 px-2 text-sm placeholder:text-gray-300 border rounded"
         />
+        {error && (
+        <div className="text-red-500 mb-4">
+          <span>{error}</span>
+        </div>
+      )}
       </div>
       <div className="grid gap-1 mb-6">
         <label htmlFor="email" className="text-gray-600">Senha</label>

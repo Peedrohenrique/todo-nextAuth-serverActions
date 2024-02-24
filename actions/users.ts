@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import { User } from "#/types/user";
 import { signIn } from "#/app/auth/providers";
+import { revalidatePath } from "next/cache";
 
 
 const UserSchema = z.object({
@@ -18,7 +19,7 @@ const UserSchema = z.object({
   role: z.string(),
 });
 
-const CreateUser = UserSchema.omit({ id: true, image: true, role: true });
+const CreateUser = UserSchema.omit({ id: true, role: true });
 
 type CreateUserState = {
   errors?: {
@@ -33,7 +34,8 @@ export async function createUser(state: CreateUserState, formData: FormData) {
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
-    
+    image: formData.get("image"),
+  
   });
 
   if (!validatedFields.success) {
@@ -43,10 +45,9 @@ export async function createUser(state: CreateUserState, formData: FormData) {
     };
   }
 
-  const { name, email, password } = validatedFields.data;
+  const { name, email, password, image } = validatedFields.data;
   const hashedPassword = await bcrypt.hash(password, 10);
   const role = "user";
-  const image = "https://img.freepik.com/fotos-gratis/ilustracao-3d-de-um-adolescente-com-um-rosto-engracado-e-oculos_1142-50955.jpg"
 
   try {
     await sql`
@@ -56,8 +57,10 @@ export async function createUser(state: CreateUserState, formData: FormData) {
   } catch (error) {
     return { message: "Falha ao inserir usuário no banco de dados." };
   }
-
-  redirect("/auth/login");
+  authenticate(undefined, formData);
+  revalidatePath("/todos");
+  redirect("/todos");
+ 
 }
 
 export async function getUserByEmail(email: string) {
@@ -82,4 +85,6 @@ export async function authenticate(
 
     throw error;
   }
+  revalidatePath("/todos");
+  redirect("/todos");
 }

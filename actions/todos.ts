@@ -24,15 +24,16 @@ export async function getTodosByUserId(userId: string) {
 }
 
 // Criando tarefa do usuário logado no sistema.
-export async function createTodo(formData: FormData, userId: string) {
-  const { todo } = CreateTodo.parse({
+export async function createTodo(formData: FormData) {
+  const { todo, user_id } = CreateTodo.parse({
     todo: formData.get("todo"),
+    user_id: formData.get("user_id"),
   });
 
   const date = new Date().toISOString();
-
+  
   try {
-    await sql`INSERT INTO todos (user_id, todo, created_at) VALUES (${userId}, ${todo}, ${date})`;
+    await sql`INSERT INTO todos (user_id, todo, created_at) VALUES (${user_id}, ${todo}, ${date})`;
   } catch (error) {
     return { message: "Falha ao criar tarefa." };
   }

@@ -3,15 +3,16 @@ import { TodoForm } from "./create-todo";
 
 export default async function PrivatePage() {
   const session = await auth()
-  const name = session?.user?.name
+  const name = session?.user?.name;
+  const id = session?.user?.id
+  const firstName = name?.split(" ")[0];
   return (
     <main className="w-full max-w-3xl mx-auto p-10 border rounded-md">
       <div className="flex flex-col justify-center items-center">
         <h1 className="text-xl font-medium text-gray-600 mb-6">
-          Olá <strong>{name}</strong>, seja bem vindo(a) a área privada.
+          Olá <strong>{firstName}</strong>, vamos adicionar uma tarefa?
         </h1>
-        <pre className="p-10 bg-gray-900 rounded-md my-10 text-gray-50">{JSON.stringify(session, null, 2)}</pre>
-        <TodoForm />
+        <TodoForm user_id={id}/>
       </div>
     </main>
   )

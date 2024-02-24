@@ -6,7 +6,7 @@ import { Header } from './header';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Lista de taferas',
+  title: 'Minhas Tarefas',
   description: 'Lista de taferas online',
 };
 

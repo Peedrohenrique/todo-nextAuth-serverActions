@@ -1,25 +1,17 @@
+import { getTodosByUserId } from "#/actions/todos"
+import { auth } from "../auth/providers";
 import { CheckTodo } from "./check-todo"
 import { DeleteTodo } from "./delete-todo"
 
-const todos = [
-  {
-    id: crypto.randomUUID(),
-    todo: 'Passear com o dog',
-    created_at: 'Fri Dec 08 2023 00:00:00'
-  },
-  {
-    id: crypto.randomUUID(),
-    todo: 'Ir para academia',
-    created_at: 'Fri Dec 08 2023 00:00:00'
-  },
-  {
-    id: crypto.randomUUID(),
-    todo: 'Visitar avó',
-    created_at: 'Fri Dec 08 2023 00:00:00'
-  },
-]
 
-export function TodosList() {
+
+export async function TodosList() {
+
+  const session = await auth();
+  
+  const id = session?.user?.id
+
+  const todos = await getTodosByUserId(String(id))
   return (
     <ul className="w-80 min-h-80 p-8 border rounded-md bg-violet-50">
       {todos.map(todo => (
