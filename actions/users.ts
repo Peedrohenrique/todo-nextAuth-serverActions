@@ -58,6 +58,12 @@ export async function createUser(state: CreateUserState, formData: FormData) {
   } catch (error) {
     return { message: "Falha ao inserir usuário no banco de dados." };
   }
+
+
+  // Após inserir o usuário, faça o login automaticamente
+  await signIn("credentials", { email, password });
+
+  
   revalidatePath("/todos");
   redirect("/todos");
  
