@@ -5,18 +5,8 @@ import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 export function LoginForm() {
-  const [error, setError] = useState<string | null>(null);
-  const [state, dispatch] = useFormState(authenticate, undefined)
-
-
-  useEffect(() => {
-    if (state === "CredentialsSignin") {
-      setError("Credenciais inválidas. Verifique seu e-mail e senha.");
-    } else {
-      setError(null);
-    }
-  }, [state]);
-  
+  const errorsState = { message: null, errors: {} }
+  const [state, dispatch] = useFormState(authenticate, errorsState)
 
   return (
     <form
@@ -33,11 +23,9 @@ export function LoginForm() {
           placeholder="email@hotmail.com"
           className="max-w-xs h-9 px-2 text-sm placeholder:text-gray-300 border rounded"
         />
-        {error && (
-        <div className="text-red-500 mb-4">
-          <span>{error}</span>
-        </div>
-      )}
+        {state.errors?.email && state.errors.email.map(error => (
+          <p key={error} className="text-sm text-red-500">{error}</p>
+        ))}
       </div>
       <div className="grid gap-1 mb-6">
         <label htmlFor="email" className="text-gray-600">Senha</label>
@@ -48,6 +36,9 @@ export function LoginForm() {
           placeholder="********"
           className="max-w-xs h-9 px-2 text-sm placeholder:text-gray-300 border rounded"
         />
+        {state.errors?.password && state.errors.password.map(error => (
+          <p key={error} className="text-sm text-red-500">{error}</p>
+        ))}
       </div>
       <button
         type="submit"

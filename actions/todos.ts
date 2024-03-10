@@ -13,15 +13,22 @@ const TodoSchema = z.object({
 
 const CreateTodo = TodoSchema.omit({ id: true, created_at: true });
 
-//Buscando tarefa do usuário logado no sistema.
-export async function getTodosByUserId(userId: string) {
+//Buscando tarefa do usuário logado no sistema com filtro.
+export async function getFilteredTodos(query: string, userId: string) {
   try {
-    const { rows } = await sql`SELECT * FROM todos WHERE user_id = ${userId}`;
+    const { rows } = await sql`
+      SELECT *
+      FROM todos
+      WHERE user_id = ${userId}
+      AND todo ILIKE ${`%${query}%`}
+      ORDER BY created_at DESC
+    `;
     return rows;
   } catch (error) {
     throw new Error("Falha ao buscar tarefa no banco de dados.");
   }
 }
+
 
 // Criando tarefa do usuário logado no sistema.
 export async function createTodo(formData: FormData) {

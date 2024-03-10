@@ -10,11 +10,11 @@ export const authConfig = {
       const isTodosRoute = nextUrl.pathname.startsWith("/todos");
 
       if (!isLoggedIn && (isPrivateRoutes || isTodosRoute)) {
-        return false; // Redirecionar usuários não autenticados para a página de login
+        return false;
       }
 
       if (isLoggedIn && isAuthRoutes) {
-        return "/private"; // Redirecionar usuários autenticados para a página privada
+        return Response.redirect(new URL('/todos', nextUrl))
       }
 
       return true;

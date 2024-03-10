@@ -30,6 +30,7 @@ type CreateUserState = {
 };
 
 export async function createUser(state: CreateUserState, formData: FormData) {
+
   const validatedFields = CreateUser.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
@@ -57,7 +58,6 @@ export async function createUser(state: CreateUserState, formData: FormData) {
   } catch (error) {
     return { message: "Falha ao inserir usuário no banco de dados." };
   }
-  authenticate(undefined, formData);
   revalidatePath("/todos");
   redirect("/todos");
  
@@ -73,18 +73,44 @@ export async function getUserByEmail(email: string) {
   }
 }
 
+
+type LoginUserState = {
+  errors?: {
+    email?: string[];
+    password?: string[];
+  };
+};
+
+const LoginSchema = z.object({
+  email: z.string().email("Insira um e-mail válido"),
+  password: z.string().min(6, "A senha deve conter no mínimo 6 caracteres"),
+});
+
 export async function authenticate(
-  state: string | undefined,
+  state: LoginUserState,
   formData: FormData
-) {
+): Promise<LoginUserState> {
+
+  const validatedFields = LoginSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
   try {
     await signIn("credentials", Object.fromEntries(formData));
+    
+    revalidatePath("/todos");
+    redirect("/todos");
   } catch (error) {
-    if ((error as Error).message.includes("CredentialsSignin"))
-      return "CredentialsSignin";
-
+    if ((error as Error).message.includes("CredentialsSignin")) {
+      "CredentialsSignin";
+    }
     throw error;
   }
-  revalidatePath("/todos");
-  redirect("/todos");
 }

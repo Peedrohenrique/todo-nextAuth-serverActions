@@ -5,31 +5,31 @@ import Credentials from "next-auth/providers/credentials";
 import { getUserByEmail } from "#/actions/users";
 import bcrypt from "bcrypt";
 
+const credentialsSchema = z.object({
+  email: z.string().email("Insira um e-mail válido"),
+  password: z.string().min(6, "A senha deve conter no mínimo 6 caracteres"),
+});
+
 const providers = {
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = z
-          .object({
-            email: z.string().email("Insira um e-mail válido"),
-            password: z
-              .string()
-              .min(6, "A senha deve conter no mínimo 6 caracteres"),
-          })
-          .safeParse(credentials);
+        const parsedCredentials = credentialsSchema.safeParse(credentials);
 
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
+        if (!parsedCredentials.success) {
+          throw new Error(parsedCredentials.error.message);
+        }
 
-          const user = await getUserByEmail(email);
-          if (!user) return null;
+        const { email, password } = parsedCredentials.data;
 
-          const passwordMatch = await bcrypt.compare(password, user.password);
+        const user = await getUserByEmail(email);
+        if (!user) return null;
 
-          if (passwordMatch) {
-            return user;
-          }
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (passwordMatch) {
+          return user;
         }
 
         return null;
