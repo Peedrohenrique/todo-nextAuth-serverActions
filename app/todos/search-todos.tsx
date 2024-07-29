@@ -21,7 +21,7 @@ const handleSearchTodos = (value: string) => {
   return (
     <input
       type="search"
-      placeholder="Pesquisar todo..."
+      placeholder="Pesquisar tarefas..."
       onChange={e => handleSearchTodos(e.target.value)}
       defaultValue={searchParams.get('query')?.toString()}
       className="block w-80 p-2 mb-4 border rounded-md" 

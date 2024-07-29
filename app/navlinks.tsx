@@ -6,27 +6,49 @@ import { usePathname } from "next/navigation";
 const navlinks = [
   { name: 'Home', href: '/' },
   { name: 'Tarefas', href: '/todos' },
-  { name: 'Cadastrar', href: '/private' },
+  { name: 'Cadastrar', href: '/auth/register' },
 ];
 
-export function Navlinks() {
-  const pathname = usePathname()
+const navlinksPrivate = [
+  { name: 'Home', href: '/' },
+  { name: 'Tarefas', href: '/todos' },
+  { name: 'NovaTarefa', href: '/private' },
+];
+
+export function Navlinks({ userName }: { userName: string  }) {
+  const pathname = usePathname();
 
   return (
     <ul className="flex items-left justify-start gap-5">
-      {navlinks.map(link => {
-        const isActive = pathname === link.href
-        return (
-          <li key={link.name}>
-            <Link 
-              href={link.href} 
-              className={`${isActive ? 'text-violet-500' : 'text-gray-600'}`}
-            >
-              {link.name}
-            </Link>
-          </li>
-        )
-      })}
+      {userName ? (
+        navlinksPrivate.map(navLink => {
+          const isActive = pathname === navLink.href;
+          return (
+            <li key={navLink.name}>
+              <Link 
+                href={navLink.href} 
+                className={`${isActive ? 'text-violet-500' : 'text-gray-600'}`}
+              >
+                {navLink.name}
+              </Link>
+            </li>
+          );
+        })
+      ) : (
+        navlinks.map(navLink => {
+          const isActive = pathname === navLink.href;
+          return (
+            <li key={navLink.name}>
+              <Link 
+                href={navLink.href} 
+                className={`${isActive ? 'text-violet-500' : 'text-gray-600'}`}
+              >
+                {navLink.name}
+              </Link>
+            </li>
+          );
+        })
+      )}
     </ul>
-  )
+  );
 }

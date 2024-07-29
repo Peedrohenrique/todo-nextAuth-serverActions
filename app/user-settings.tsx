@@ -1,14 +1,18 @@
 import Image from "next/image";
-import { signOut } from "./auth/providers";
+import { auth, signOut } from "./auth/providers";
 
 export async function UserSettings({
   image,
 }: {
   image?: string | null | undefined;
 }) {
+
+  const session = await auth()
+  const user = session?.user.name
+  
   return (
     <>
-      {image && (
+      {user && (
         <div className="flex items-center gap-5">
            <form
             action={async () => {

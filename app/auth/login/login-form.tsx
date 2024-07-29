@@ -1,7 +1,6 @@
 'use client'
 import { authenticate } from "#/actions/users";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useFormState } from "react-dom";
 
 export function LoginForm() {
